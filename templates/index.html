@@ -129,6 +129,15 @@
         padding: 20px;
       }
     }
+    #loader {
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+      color: #555;
+    }
+
+
+
   </style>
 </head>
 <body>
@@ -188,6 +197,8 @@
           <button onclick="handleAddToCart()">Add to Cart 🛒</button>
           <button onclick="alert('Design sent to Printify. Listing in progress...')">Sell & Earn 💸</button>
         </div>
+        <div id="loader" style="display:none; margin-top: 10px;">⏳ Generating Draft Order...</div>
+
       </div>
       <div class="product-images">
         <img src="https://www.shopveronica.xyz/cdn/shop/files/7475227925627128823_2048_d789a888-223f-4056-9590-16f97db8a21c.jpg" alt="White Shirt" onclick="changeTshirt('white')">
@@ -255,35 +266,32 @@
 
 
     async function handleAddToCart() {
-      const size = document.getElementById('size').value;
-      const color = document.getElementById('color').value;
-
-      const payload = {
-        image_url: currentImage,
-        size: size,
-        color: color
-      };
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
 
       try {
-        const res = await fetch("https://shopify-draft-api.onrender.com/create-draft-order", {
+        const response = await fetch("https://shopify-draft-api.onrender.com/create-draft-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({ image_url, size, color })
         });
 
-        const data = await res.json();
-
+        const data = await response.json();
         if (data.invoice_url) {
-          window.location.href = data.invoice_url; // Go to checkout
+          window.open(data.invoice_url, "_blank");
         } else {
-          alert("Failed to create order. Try again.");
-          console.error(data);
+          alert("Failed to create order");
         }
-      } catch (error) {
-        alert("Error creating order. See console.");
-        console.error(error);
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+        loader.style.display = "none";
       }
-    }
+    } 
+
+
+
+
   </script>
 </body>
 </html>
