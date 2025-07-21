@@ -337,8 +337,21 @@
           const data = await response.json();
           if (data.image_url) {
             currentImage = data.image_url;
-            alert("✅ Image uploaded and previewed!");
-          } else {
+
+            // Show preview in main preview div (for consistency with AI flow)
+            document.getElementById("preview").innerHTML = `
+              <img src="${currentImage}" alt="Uploaded Design" />
+              <button style='margin-top: 10px;' onclick='showOptions()'>Generate Mockup 👕</button>
+            `;
+
+            // Optional: still update #previewImage if needed elsewhere
+            const previewImg = document.getElementById("previewImage");
+            previewImg.src = currentImage;
+            previewImg.style.display = "block";
+
+            alert("✅ Image uploaded and ready to mockup!");
+          }
+          else {
             alert("Upload failed 😢");
           }
         } catch (err) {
