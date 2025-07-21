@@ -248,10 +248,16 @@
 
     function showOptions() {
       if (!currentImage) return;
+
+      // Hide the small image preview when switching to mockup view
+      const previewImg = document.getElementById("previewImage");
+      if (previewImg) previewImg.style.display = "none";
+
       document.getElementById('options').style.display = "block";
       document.getElementById('thumbStrip').style.display = "flex";
       renderMockup();
     }
+
 
     function renderMockup() {
       const base = tshirtBaseImages[currentColor];
@@ -348,6 +354,7 @@
             const previewImg = document.getElementById("previewImage");
             previewImg.src = currentImage;
             previewImg.style.display = "block";
+            
 
             alert("✅ Image uploaded and ready to mockup!");
           }
