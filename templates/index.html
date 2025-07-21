@@ -147,7 +147,7 @@
       <textarea id="prompt" placeholder="Describe your design idea... (e.g., A cat floating in space)"></textarea>
       <button onclick="generateImage()">Generate Image 🎨</button>
       <div class="upload-row">
-      <input type="file" id="imageUploadInput" accept="image/*" />
+      <input type="file" id="uploadInput" accept="image/*" />
       <button onclick="handleImageUpload()">Upload Your Own Image 📤</button>
     </div>
 
@@ -333,14 +333,14 @@
       formData.append("image", file);
 
       try {
-        const response = await fetch("https://YOUR_BACKEND_URL/upload-image", {
+        const response = await fetch("https://shopify-draft-api.onrender.com/upload-image", {
           method: "POST",
           body: formData,
         });
 
         const data = await response.json();
         if (data.image_url) {
-          generatedImageUrl = data.image_url;
+          currentImage = data.image_url;
 
           // 👇 Show image preview
           const previewImg = document.getElementById("previewImage");
