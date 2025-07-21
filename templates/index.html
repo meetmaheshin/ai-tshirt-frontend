@@ -147,9 +147,9 @@
       <textarea id="prompt" placeholder="Describe your design idea... (e.g., A cat floating in space)"></textarea>
       <button onclick="generateImage()">Generate Image 🎨</button>
       <div class="upload-row">
-        <input type="file" id="imageUploadInput" accept="image/*" />
-        <button onclick="handleImageUpload()">Upload Your Own Image 📤</button>
-      </div>
+      <input type="file" id="imageUploadInput" accept="image/*" />
+      <button onclick="handleImageUpload()">Upload Your Own Image 📤</button>
+    </div>
 
       <div class="mockup" id="mockup">
         <div class="thumb-strip" id="thumbStrip">
@@ -200,7 +200,7 @@
         </select>
         <div class="button-row">
           <button onclick="handleAddToCart()">Add to Cart 🛒</button>
-          <button onclick="alert('Design sent to Printify. Listing in progress...')">Sell & Earn 💸</button>
+          <button onclick="alert('Coming soon...')">Sell & Earn 💸</button>
         </div>
         <div id="loader" style="display:none; margin-top: 10px;">⏳ Generating Draft Order...</div>
 
@@ -270,31 +270,90 @@
     }
 
     let generatedImageUrl = ""; // ✅ Global variable for image URL
-    async function handleImageUpload() {
-      const fileInput = document.getElementById('imageUploadInput');
-      const file = fileInput.files[0];
-      if (!file) return alert("Please choose an image");
+    async function handleAddToCart() {
+      const loader = document.getElementById("loader");
+      loader.style.display = "block";
 
-      const formData = new FormData();
-      formData.append('image', file);
+      const size = document.getElementById("size").value;
+      const color = document.getElementById("color").value;
+      const image_url = currentImage; // ✅ this is where your design URL is
 
-      document.getElementById("loader").style.display = "block";
+      if (!image_url) {
+        alert("Please generate an image first!");
+        loader.style.display = "none";
+        return;
+      }
 
       try {
-        const res = await fetch("/upload-image", {
+        const response = await fetch("https://shopify-draft-api.onrender.com/create-draft-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image_url, size, color })
+        });
+
+        const data = await response.json();
+        if (data.invoice_url) {
+          window.open(data.invoice_url, "_blank");
+        } else {
+          alert("Failed to create order");
+        }
+      } catch (err) {
+        alert("Error: " + err.message);
+      } finally {
+        loader.style.display = "none";
+      }
+    }
+    function handleImageUpload() {
+      const fileInput = document.getElementById("uploadInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select an image file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        generatedImageUrl = e.target.result;
+        alert("Image uploaded successfully! 🖼️");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleImageUpload() {
+      const fileInput = document.getElementById("uploadInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("Please select an image file.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      try {
+        const response = await fetch("https://YOUR_BACKEND_URL/upload-image", {
           method: "POST",
           body: formData,
         });
 
-        const data = await res.json();
-        generatedImageUrl = data.image_url;
+        const data = await response.json();
+        if (data.image_url) {
+          generatedImageUrl = data.image_url;
 
-        document.getElementById("previewImage").src = generatedImageUrl;
-        document.getElementById("previewImage").style.display = "block";
+          // 👇 Show image preview
+          const previewImg = document.getElementById("previewImage");
+          previewImg.src = data.image_url;
+          previewImg.style.display = "block";
+
+          alert("✅ Image uploaded and previewed!");
+        } else {
+          alert("Upload failed 😢");
+        }
       } catch (err) {
-        alert("Image upload failed 😢");
-      } finally {
-        document.getElementById("loader").style.display = "none";
+        console.error("Upload error:", err);
+        alert("Upload error 🚨");
       }
     }
 
