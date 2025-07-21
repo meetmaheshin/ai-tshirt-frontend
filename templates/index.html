@@ -163,6 +163,7 @@
 
     <div class="right">
       <div id="preview" class="image-preview"></div>
+      <img id="previewImage" style="max-width: 200px; display: none;" />
       <div id="options" class="options" style="display:none;">
         <select id="color">
           <option value="White">White</option>
@@ -356,6 +357,16 @@
         alert("Upload error 🚨");
       }
     }
+
+    reader.onload = function (e) {
+      generatedImageUrl = e.target.result;
+      const preview = document.getElementById("previewImage");
+      if (preview) {
+        preview.src = generatedImageUrl;
+        preview.style.display = "block"; // Show it
+      }
+      alert("Image uploaded successfully! 🖼️");
+    };
 
 
 
