@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI T-Shirt Designer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f8f8;
+    }
+    .main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 40px 20px;
+      gap: 30px;
+      max-width: 100%;
+      margin: auto;
+    }
+    .left, .right {
+      flex: 1;
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      min-height: 120px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .image-preview img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+    .options {
+      margin-top: 20px;
+    }
+    select {
+      width: 48%;
+      padding: 10px;
+      border-radius: 6px;
+      margin-right: 4%;
+      margin-bottom: 10px;
+    }
+    .product-images {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .product-images img {
+      width: 70px;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+    .mockup {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .mockup-container {
+      position: relative;
+      width: 600px;
+      height: auto;
+      margin: 0 auto;
+    }
+    .mockup-base,
+    .mockup-design {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    .mockup-design {
+      top: 180px;
+      left: 195px;
+      width: 220px;
+      height: auto;
+      z-index: 2;
+    }
+    .mockup-base {
+      z-index: 1;
+    }
+    .thumb-strip {
+      display: none;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .thumb-strip img {
+      width: 80px;
+      height: auto;
+      border-radius: 8px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+    }
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .button-row button {
+      width: 48%;
+    }
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="left">
+      <h2>🧠 Create Your AI-Powered T-Shirt</h2>
+      <textarea id="prompt" placeholder="Describe your design idea... (e.g., A cat floating in space)"></textarea>
+      <button onclick="generateImage()">Generate Image 🎨</button>
+      <div class="mockup" id="mockup">
+        <div class="thumb-strip" id="thumbStrip">
+          <img src="https://www.shopveronica.xyz/cdn/shop/files/7475227925627128823_2048_d789a888-223f-4056-9590-16f97db8a21c.jpg" alt="thumb1">
+          <img src="https://www.shopveronica.xyz/cdn/shop/files/17733986507759019446_2048_62f368e5-6772-41f1-81df-38704bcf7b7e.jpg" alt="thumb2">
+          <img src="https://www.shopveronica.xyz/cdn/shop/files/1163147699400027616_2048.jpg" alt="thumb3">
+        </div>
+        <div id="mockupContainer"></div>
+      </div>
+    </div>
+
+    <div class="right">
+      <div id="preview" class="image-preview"></div>
+      <div id="options" class="options" style="display:none;">
+        <select id="color">
+          <option value="White">White</option>
+          <option value="Black">Black</option>
+          <option value="Gray">Gray</option>
+          <option value="Coral Silk">Coral Silk</option>
+          <option value="Antique Orange">Antique Orange</option>
+          <option value="Russet">Russet</option>
+          
+          <option value="Sand">Sand</option>
+          <option value="Ice Grey">Ice Grey</option>
+          <option value="Yellow Haze">Yellow Haze</option>
+          <option value="Sport Grey">Sport Grey</option>
+          <option value="Tennessee Orange">Tennessee Orange</option>
+          <option value="Gold">Gold</option>
+          <option value="Old Gold">Old Gold</option>
+          <option value="Brown Savana">Brown Savana</option>
+          <option value="Orange">Orange</option>
+          <option value="Sunset">Sunset</option>
+          <option value="Safety Orange">Safety Orange</option>
+          <option value="Texas Orange">Texas Orange</option>
+          <option value="Maroon">Maroon</option>
+          <option value="Dark Chocolate">Dark Chocolate</option>
+        </select>
+        <select id="size">
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="2XL">2XL</option>
+          <option value="3XL">3XL</option>
+          <option value="4XL">4XL</option>
+          <option value="5XL">5XL</option>
+        </select>
+        <div class="button-row">
+          <button onclick="handleAddToCart()">Add to Cart 🛒</button>
+          <button onclick="alert('Design sent to Printify. Listing in progress...')">Sell & Earn 💸</button>
+        </div>
+      </div>
+      <div class="product-images">
+        <img src="https://www.shopveronica.xyz/cdn/shop/files/7475227925627128823_2048_d789a888-223f-4056-9590-16f97db8a21c.jpg" alt="White Shirt" onclick="changeTshirt('white')">
+        <img src="https://www.shopveronica.xyz/cdn/shop/files/17733986507759019446_2048_62f368e5-6772-41f1-81df-38704bcf7b7e.jpg" alt="Black Shirt" onclick="changeTshirt('black')">
+        <img src="https://www.shopveronica.xyz/cdn/shop/files/1163147699400027616_2048.jpg" alt="Gray Shirt" onclick="changeTshirt('gray')">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentImage = "";
+    let currentColor = "white";
+
+    const tshirtBaseImages = {
+      white: "https://www.shopveronica.xyz/cdn/shop/files/7475227925627128823_2048_d789a888-223f-4056-9590-16f97db8a21c.jpg",
+      black: "https://www.shopveronica.xyz/cdn/shop/files/17733986507759019446_2048_62f368e5-6772-41f1-81df-38704bcf7b7e.jpg",
+      gray:  "https://www.shopveronica.xyz/cdn/shop/files/1163147699400027616_2048.jpg"
+    };
+
+    async function generateImage() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) return alert("Please enter a design idea!");
+
+      document.getElementById('preview').innerHTML = "Generating...";
+      document.getElementById('options').style.display = "none";
+      document.getElementById('mockupContainer').innerHTML = "";
+
+      try {
+        const res = await fetch('/apps/ai-gen?prompt=' + encodeURIComponent(prompt));
+        const data = await res.json();
+        if (data.images && data.images.length > 0) {
+          currentImage = data.images[0];
+          document.getElementById('preview').innerHTML = `<img src="${currentImage}" alt="Generated Design" /><button style='margin-top: 10px;' onclick='showOptions()'>Generate Mockup 👕</button>`;
+        } else {
+          document.getElementById('preview').innerHTML = "❌ Failed to generate image.";
+        }
+      } catch (err) {
+        document.getElementById('preview').innerHTML = "❌ Error: " + err.message;
+      }
+    }
+
+    function showOptions() {
+      if (!currentImage) return;
+      document.getElementById('options').style.display = "block";
+      document.getElementById('thumbStrip').style.display = "flex";
+      renderMockup();
+    }
+
+    function renderMockup() {
+      const base = tshirtBaseImages[currentColor];
+      const mockupHTML = `
+        <h4>Mockup Preview</h4>
+        <div class="mockup-container">
+          <img src="${base}" class="mockup-base" alt="T-shirt base">
+          <img src="${currentImage}" class="mockup-design" alt="Your design">
+        </div>
+      `;
+      document.getElementById('mockupContainer').innerHTML = mockupHTML;
+    }
+
+    function changeTshirt(color) {
+      currentColor = color;
+      if (currentImage) renderMockup();
+    }
+
+
+    async function handleAddToCart() {
+      const size = document.getElementById('size').value;
+      const color = document.getElementById('color').value;
+
+      const payload = {
+        image_url: currentImage,
+        size: size,
+        color: color
+      };
+
+      try {
+        const res = await fetch("https://shopify-draft-api.onrender.com/create-draft-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.invoice_url) {
+          window.location.href = data.invoice_url; // Go to checkout
+        } else {
+          alert("Failed to create order. Try again.");
+          console.error(data);
+        }
+      } catch (error) {
+        alert("Error creating order. See console.");
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
+
