@@ -28,7 +28,7 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
     textarea {
-      width: 100%;
+      width: 90%;
       padding: 12px;
       font-size: 16px;
       border-radius: 8px;
@@ -142,6 +142,11 @@
       border: solid;
       padding: 10px;
     }
+    .ai-row {
+        border: solid;
+        margin-top: 20px;
+        padding: 10px;
+    }
 
 
   </style>
@@ -149,12 +154,15 @@
 <body>
   <div class="main">
     <div class="left">
+      <div class="upload-row">
+      <h2> Upload Your Image</h2>
+      <input type="file" id="uploadInput" accept="image/*" />
+      <button onclick="handleImageUpload()">Upload Your Own Image 📤</button>
+    </div>
+    <div class="ai-row">
       <h2>🧠 Create Your AI-Powered T-Shirt</h2>
       <textarea id="prompt" placeholder="Describe your design idea... (e.g., A cat floating in space)"></textarea>
       <button onclick="generateImage()">Generate Image 🎨</button>
-      <div class="upload-row">
-      <input type="file" id="uploadInput" accept="image/*" />
-      <button onclick="handleImageUpload()">Upload Your Own Image 📤</button>
     </div>
 
       <div class="mockup" id="mockup">
@@ -212,11 +220,11 @@
         <div id="loader" style="display:none; margin-top: 10px;">⏳ Generating Draft Order...</div>
 
       </div>
-      <div class="product-images">
+      <!-- <div class="product-images">
         <img src="https://www.shopveronica.xyz/cdn/shop/files/7475227925627128823_2048_d789a888-223f-4056-9590-16f97db8a21c.jpg" alt="White Shirt" onclick="changeTshirt('white')">
         <img src="https://www.shopveronica.xyz/cdn/shop/files/17733986507759019446_2048_62f368e5-6772-41f1-81df-38704bcf7b7e.jpg" alt="Black Shirt" onclick="changeTshirt('black')">
         <img src="https://www.shopveronica.xyz/cdn/shop/files/1163147699400027616_2048.jpg" alt="Gray Shirt" onclick="changeTshirt('gray')">
-      </div>
+      </div> -->
     </div>
   </div>
 
