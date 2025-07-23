@@ -247,7 +247,7 @@
       document.getElementById('mockupContainer').innerHTML = "";
 
       try {
-        const res = await fetch('/apps/ai-gen?prompt=' + encodeURIComponent(prompt));
+        const res = await fetch('http://164.52.194.163:5001/apps/ai-gen?prompt=' + encodeURIComponent(prompt));
         const data = await res.json();
         if (data.images && data.images.length > 0) {
           currentImage = data.images[0];
@@ -306,7 +306,7 @@
       }
 
       try {
-        const response = await fetch("https://shopify-draft-api.onrender.com/create-draft-order", {
+        const response = await fetch("http://164.52.194.163:5001/create-draft-order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image_url, size, color })
@@ -349,7 +349,7 @@
         formData.append("image", file);
 
         try {
-          const response = await fetch("https://shopify-draft-api.onrender.com/upload-image", {
+          const response = await fetch("http://164.52.194.163:5001/upload-image", {
             method: "POST",
             body: formData,
           });
